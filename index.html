@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>منصة الشكاوى - الفصول ومعامل الكمبيوتر</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9edf2 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            color: #1e3c72;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .header h1 i {
+            font-size: 2rem;
+        }
+
+        .header p {
+            color: #2c3e66;
+            font-size: 1.05rem;
+            border-bottom: 2px solid #3498db;
+            display: inline-block;
+            padding-bottom: 0.3rem;
+        }
+
+        .two-columns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .form-section {
+            flex: 1;
+            min-width: 280px;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15);
+            padding: 1.8rem;
+            transition: transform 0.2s ease;
+        }
+
+        .complaints-section {
+            flex: 1.2;
+            min-width: 300px;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15);
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-title, .list-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #1e3c72;
+            border-right: 5px solid #3498db;
+            padding-right: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        select, input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ccd7e6;
+            border-radius: 18px;
+            font-size: 1rem;
+            background-color: #fefefe;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        select:focus, input:focus, textarea:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        button:hover {
+            background: #2c7ab3;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .complaints-list {
+            flex: 1;
+            max-height: 500px;
+            overflow-y: auto;
+            padding-left: 5px;
+        }
+
+        .complaint-card {
+            background: #f9fafc;
+            border-radius: 20px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border-right: 5px solid #3498db;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .complaint-card:hover {
+            background: #ffffff;
+            transform: translateX(-4px);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+        }
+
+        .complaint-type {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .type-classroom {
+            background: #d9effa;
+            color: #0369a1;
+        }
+
+        .type-lab {
+            background: #e0f2fe;
+            color: #0c4e6e;
+        }
+
+        .complaint-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 6px 0 8px 0;
+            color: #0f172a;
+        }
+
+        .complaint-detail {
+            color: #334155;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 8px 0;
+            word-break: break-word;
+        }
+
+        .complaint-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            font-size: 0.75rem;
+            color: #5b6e8c;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 10px;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.8rem;
+            width: auto;
+            padding: 5px 12px;
+            border-radius: 30px;
+            background: #fee2e2;
+            transition: 0.2s;
+            box-shadow: none;
+        }
+
+        .delete-btn:hover {
+            background: #fecaca;
+            color: #b91c1c;
+        }
+
+        .empty-msg {
+            text-align: center;
+            color: #7f8c8d;
+            padding: 2rem;
+            font-style: italic;
+        }
+
+        .toast-message {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2c3e50;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transition: opacity 0.3s;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .two-columns {
+                flex-direction: column;
+            }
+            .header h1 {
+                font-size: 1.7rem;
+            }
+        }
+
+        .status-badge {
+            background: #2ecc71;
+            color: white;
+            font-size: 0.7rem;
+            border-radius: 40px;
+            padding: 3px 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>
+            📢 منصة شكاوى الفصول ومعامل الكمبيوتر
+        </h1>
+        <p>سجل مشكلتك وسيتم التعامل معها بأولوية</p>
+    </div>
+
+    <div class="two-columns">
+        <div class="form-section">
+            <div class="form-title">📝 شكوى جديدة</div>
+            <form id="complaintForm">
+                <div class="form-group">
+                    <label>🏷️ نوع المشكلة *</label>
+                    <select id="complaintType" required>
+                        <option value="classroom">فصل دراسي (قاعة محاضرات)</option>
+                        <option value="lab">معمل كمبيوتر</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>🔢 رقم الفصل / المعمل *</label>
+                    <input type="text" id="roomNumber" placeholder="مثال: 203 أو Lab-4" required maxlength="30">
+                </div>
+                <div class="form-group">
+                    <label>📌 عنوان مختصر للمشكلة *</label>
+                    <input type="text" id="shortTitle" placeholder="مثال: تكييف لا يعمل / أعطال في الحاسوب" required maxlength="60">
+                </div>
+                <div class="form-group">
+                    <label>📝 وصف تفصيلي *</label>
+                    <textarea id="description" placeholder="اذكر تفاصيل المشكلة بالضبط... (مثلاً: 5 أجهزة لا تعمل، الإضاءة خافتة، كراسي مكسورة)" required></textarea>
+                </div>
+                <button type="submit" id="submitBtn">➕ إرسال الشكوى</button>
+            </form>
+        </div>
+
+        <div class="complaints-section">
+            <div class="list-title">📋 قائمة الشكاوى المقدمة</div>
+            <div id="complaintsContainer" class="complaints-list">
+                <div class="empty-msg">✨ لا توجد شكاوى حالياً. أضف شكوى جديدة.</div>
+            </div>
+            <div style="margin-top: 15px; text-align: left;">
+                <button id="clearAllBtn" style="background: #e67e22; width: auto; padding: 8px 18px; font-size: 0.85rem;">🗑️ مسح الكل</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="toastMsg" class="toast-message"></div>
+
+<script>
+    function getComplaints() {
+        const stored = localStorage.getItem("classLabComplaints");
+        if(stored) {
+            try {
+                return JSON.parse(stored);
+            } catch(e) {
+                return [];
+            }
+        }
+        return [];
+    }
+
+    function saveComplaints(complaints) {
+        localStorage.setItem("classLabComplaints", JSON.stringify(complaints));
+    }
+
+    function showToast(message, duration = 3000) {
+        const toast = document.getElementById("toastMsg");
+        toast.textContent = message;
+        toast.style.opacity = "1";
+        setTimeout(() => {
+            toast.style.opacity = "0";
+        }, duration);
+    }
+
+    function renderComplaints() {
+        const complaints = getComplaints();
+        const container = document.getElementById("complaintsContainer");
+        if(!container) return;
+        if(complaints.length === 0) {
+            container.innerHTML = '<div class="empty-msg">📭 لا توجد شكاوى حالياً. كن أول من يبلغ عن مشكلة!</div>';
+            return;
+        }
+        let html = '';
+        complaints.forEach((complaint, index) => {
+            const typeLabel = complaint.type === 'classroom' ? '🏫 فصل دراسي' : '💻 معمل كمبيوتر';
+            const typeClass = complaint.type === 'classroom' ? 'type-classroom' : 'type-lab';
+            const roomDisplay = complaint.roomNumber ? complaint.roomNumber : 'غير محدد';
+            const dateStr = complaint.date ? complaint.date : new Date().toLocaleString('ar-EG');
+            html += `
+                <div class="complaint-card" data-id="${index}">
+                    <span class="complaint-type ${typeClass}">${typeLabel}</span>
+                    <div class="complaint-title">📍 رقم ${roomDisplay} : ${escapeHtml(complaint.title)}</div>
+                    <div class="complaint-detail">📄 ${escapeHtml(complaint.description)}</div>
+                    <div class="complaint-meta">
+                        <span>🕒 ${dateStr}</span>
+                        <button class="delete-btn" data-index="${index}">✖ حذف</button>
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const idx = btn.getAttribute('data-index');
+                if(idx !== null) deleteComplaint(parseInt(idx));
+            });
+        });
+    }
+
+    function escapeHtml(str) {
+        if(!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if(m === '&') return '&amp;';
+            if(m === '<') return '&lt;';
+            if(m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+
+    function addComplaint(complaintData) {
+        const complaints = getComplaints();
+        const newComplaint = {
+            id: Date.now(),
+            type: complaintData.type,
+            roomNumber: complaintData.roomNumber.trim(),
+            title: complaintData.title.trim(),
+            description: complaintData.description.trim(),
+            date: new Date().toLocaleString('ar-EG')
+        };
+        complaints.unshift(newComplaint);
+        saveComplaints(complaints);
+        renderComplaints();
+        showToast("✅ تم تقديم الشكوى بنجاح");
+    }
+
+    function deleteComplaint(index) {
+        const complaints = getComplaints();
+        if(index >= 0 && index < complaints.length) {
+            complaints.splice(index, 1);
+            saveComplaints(complaints);
+            renderComplaints();
+            showToast("🗑️ تم حذف الشكوى");
+        } else {
+            showToast("حدث خطأ أثناء الحذف", 1500);
+        }
+    }
+
+    function clearAllComplaints() {
+        if(confirm("⚠️ هل أنت متأكد من حذف جميع الشكاوى؟ لا يمكن التراجع.")) {
+            saveComplaints([]);
+            renderComplaints();
+            showToast("🧹 تم مسح جميع الشكاوى");
+        }
+    }
+
+    document.getElementById("complaintForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const type = document.getElementById("complaintType").value;
+        const roomNumber = document.getElementById("roomNumber").value;
+        const shortTitle = document.getElementById("shortTitle").value;
+        const description = document.getElementById("description").value;
+
+        if(!roomNumber || !shortTitle || !description) {
+            showToast("❌ الرجاء تعبئة جميع الحقول (رقم المكان، العنوان، الوصف)", 2500);
+            return;
+        }
+        if(roomNumber.trim() === "" || shortTitle.trim() === "" || description.trim() === "") {
+            showToast("❌ لا يمكن أن تحتوي الحقول على مسافات فقط", 2000);
+            return;
+        }
+        if(shortTitle.length > 60) {
+            showToast("⚠️ العنوان طويل جداً (حد أقصى 60 حرف)", 2000);
+            return;
+        }
+        addComplaint({
+            type: type,
+            roomNumber: roomNumber,
+            title: shortTitle,
+            description: description
+        });
+        document.getElementById("complaintForm").reset();
+        document.getElementById("complaintType").value = "classroom";
+        document.getElementById("roomNumber").focus();
+    });
+
+    document.getElementById("clearAllBtn").addEventListener("click", function() {
+        clearAllComplaints();
+    });
+
+    renderComplaints();
+</script>
+</body>
+</html>
