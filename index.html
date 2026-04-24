@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>منصة الشكاوى الذكية - الفصول والمعامل</title>
+    <title>منصة الشكاوى الذكية - نظام الأكورديون</title>
     <style>
         * {
             margin: 0;
@@ -19,174 +19,129 @@
         }
 
         .container {
-            max-width: 1300px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
 
-        .header h1 {
-            font-size: 2.2rem;
+        .header h1 { color: #1e3c72; margin-bottom: 10px; }
+
+        /* قسم التفاصيل الرئيسي */
+        #detailsSection {
+            display: none;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #d1d9e6;
+        }
+
+        .labs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        /* تصميم الأكورديون */
+        .lab-card {
+            background: #fdfdfd;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+
+        .accordion-btn {
+            width: 100%;
+            background: #f8f9fa;
+            border: none;
+            padding: 15px;
+            text-align: right;
+            font-weight: bold;
             color: #1e3c72;
-            margin-bottom: 0.5rem;
+            cursor: pointer;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
+            transition: 0.3s;
         }
 
-        .header p {
-            color: #2c3e66;
-            font-size: 1.05rem;
-            border-bottom: 2px solid #3498db;
-            display: inline-block;
-            padding-bottom: 0.3rem;
+        .accordion-btn:hover { background: #eef2f7; }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: #fff;
+        }
+
+        .accordion-content ul {
+            padding: 15px 30px;
+            list-style: square;
+            font-size: 14px;
+            color: #555;
         }
 
         .two-columns {
             display: flex;
             flex-wrap: wrap;
-            gap: 2rem;
+            gap: 20px;
         }
 
-        .form-section, .lab-card {
+        .form-section, .complaints-section {
             flex: 1;
-            min-width: 280px;
+            min-width: 320px;
             background: white;
-            border-radius: 28px;
-            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15);
-            padding: 1.8rem;
-            transition: transform 0.2s ease;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         }
 
-        .complaints-section {
-            flex: 1.2;
-            min-width: 300px;
-            background: white;
-            border-radius: 28px;
-            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15);
-            padding: 1.8rem;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-title, .list-title {
-            font-size: 1.6rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: #1e3c72;
-            border-right: 5px solid #3498db;
-            padding-right: 15px;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #2c3e50;
-        }
-
-        select, input, textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ccd7e6;
-            border-radius: 18px;
-            font-size: 1rem;
-            background-color: #fefefe;
-            outline: none;
-        }
-
-        button {
-            background: #3498db;
+        button.main-btn {
+            background: #1e3c72;
             color: white;
+            padding: 12px 25px;
             border: none;
-            padding: 12px 20px;
-            border-radius: 40px;
-            font-size: 1rem;
-            font-weight: bold;
+            border-radius: 30px;
             cursor: pointer;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
             width: 100%;
-            transition: 0.2s;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 12px;
         }
 
-        button:hover { background: #2c7ab3; }
-
-        /* صفحة التفاصيل */
-        #detailsPage {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #f0f4f8;
-            z-index: 2000;
-            padding: 40px 20px;
-            overflow-y: auto;
-        }
-
-        .labs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-
-        .complaints-list {
-            flex: 1;
-            max-height: 500px;
-            overflow-y: auto;
-        }
+        .submit-btn { background: #3498db; color: white; border: none; padding: 12px; width: 100%; border-radius: 12px; cursor: pointer; }
 
         .complaint-card {
-            background: #f9fafc;
-            border-radius: 20px;
-            padding: 1.2rem;
-            margin-bottom: 1rem;
+            background: #f8faff;
             border-right: 5px solid #3498db;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 12px;
             position: relative;
         }
 
         .auto-tag {
             background: #e74c3c;
             color: white;
-            font-size: 0.65rem;
+            font-size: 10px;
             padding: 2px 8px;
-            border-radius: 10px;
-            position: absolute;
-            top: 10px; left: 10px;
+            border-radius: 5px;
+            position: absolute; left: 10px; top: 10px;
         }
 
-        .delete-btn {
-            background: #fee2e2;
-            color: #e74c3c;
-            width: auto;
-            padding: 5px 12px;
-            font-size: 0.8rem;
-        }
+        .delete-btn { background: #ffeded; color: #e74c3c; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; }
 
-        .toast-message {
-            position: fixed;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2c3e50;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
-            opacity: 0;
-            transition: 0.3s;
-            z-index: 3000;
-        }
-
-        @media (max-width: 768px) {
-            .two-columns { flex-direction: column; }
-        }
+        @media (max-width: 768px) { .two-columns { flex-direction: column; } }
     </style>
 </head>
 <body>
@@ -194,146 +149,179 @@
 <div class="container">
     <div class="header">
         <h1>📢 منصة الشكاوى الذكية</h1>
-        <p>نظام المراقبة التلقائي للكهرباء مفعل ✅</p>
-        <div style="margin-top: 20px;">
-            <button id="showDetailsBtn" style="width: auto; background: #1e3c72; padding: 12px 30px;">🔍 عرض تفاصيل المعامل</button>
+        <p>نظام الأكورديون لتفاصيل المعامل مفعل</p>
+        <br>
+        <button id="toggleDetailsBtn" class="main-btn">🔍 Show Details (عرض المعامل)</button>
+    </div>
+
+    <div id="detailsSection">
+        <h3 style="margin-bottom: 15px; color: #1e3c72; text-align: center;">🔬 قائمة المختبرات والتجهيزات</h3>
+        <div class="labs-grid">
+            
+            <div class="lab-card">
+                <button class="accordion-btn">💻 معمل كمبيوتر 1 <span>▼</span></button>
+                <div class="accordion-content">
+                    <ul>
+                        <li>25 جهاز Desktop PC</li>
+                        <li>شاشات 20 بوصة</li>
+                        <li>طابعة ليزر</li>
+                        <li>نظام تكييف</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="lab-card">
+                <button class="accordion-btn">💻 معمل كمبيوتر 2 <span>▼</span></button>
+                <div class="accordion-content">
+                    <ul>
+                        <li>20 جهاز Desktop PC</li>
+                        <li>لوحة ذكية (Smart Board)</li>
+                        <li>جهاز عرض Data Show</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="lab-card">
+                <button class="accordion-btn">🧪 معمل الفيزياء <span>▼</span></button>
+                <div class="accordion-content">
+                    <ul>
+                        <li>موازين رقمية</li>
+                        <li>عدسات ومرايا</li>
+                        <li>أطقم تجارب الميكانيكا</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="lab-card">
+                <button class="accordion-btn">⚡ معمل الكهرباء <span>▼</span></button>
+                <div class="accordion-content">
+                    <ul>
+                        <li>أجهزة أفوميتر</li>
+                        <li>لوحات تجارب (Breadboards)</li>
+                        <li>محولات طاقة</li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <div class="two-columns">
         <div class="form-section">
-            <div class="form-title">📝 شكوى جديدة</div>
+            <h3>📝 تقديم بلاغ</h3>
             <form id="complaintForm">
-                <div class="form-group">
-                    <label>🏷️ نوع المكان *</label>
-                    <select id="complaintType" required>
-                        <option value="classroom">فصل دراسي</option>
-                        <option value="lab">معمل كمبيوتر</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>🔢 رقم المكان *</label>
-                    <input type="text" id="roomNumber" placeholder="مثال: Lab-4" required>
-                </div>
-                <div class="form-group">
-                    <label>📌 العنوان *</label>
-                    <input type="text" id="shortTitle" placeholder="مثال: عطل مفاجئ" required>
-                </div>
-                <div class="form-group">
-                    <label>📝 الوصف *</label>
-                    <textarea id="description" placeholder="اشرح المشكلة..." required></textarea>
-                </div>
-                <button type="submit">➕ إرسال يدوياً</button>
+                <select id="complaintType">
+                    <option value="classroom">فصل دراسي</option>
+                    <option value="lab">معمل كمبيوتر</option>
+                </select>
+                <input type="text" id="roomNumber" placeholder="رقم المكان" required>
+                <input type="text" id="shortTitle" placeholder="المشكلة" required>
+                <textarea id="description" placeholder="وصف المشكلة..." rows="3" required></textarea>
+                <button type="submit" class="submit-btn">إرسال البلاغ</button>
             </form>
         </div>
 
         <div class="complaints-section">
-            <div class="list-title">📋 السجل (بما في ذلك البلاغات التلقائية)</div>
-            <div id="complaintsContainer" class="complaints-list">
-                <div style="text-align:center; padding:20px; color:#7f8c8d;">لا توجد شكاوى حالياً.</div>
-            </div>
-            <button id="clearAllBtn" style="background: #e67e22; width: auto; margin-top:15px;">🗑️ مسح السجل</button>
+            <h3>📋 قائمة البلاغات</h3>
+            <div id="complaintsList" style="margin-top: 15px;"></div>
         </div>
     </div>
 </div>
-
-<div id="detailsPage">
-    <div class="container">
-        <button onclick="document.getElementById('detailsPage').style.display='none'" style="width:auto; background:#e74c3c; margin-bottom: 20px;">⬅ عودة</button>
-        <h2 style="text-align:center; margin-bottom:30px;">توزيع المختبرات</h2>
-        <div class="labs-grid">
-            <div class="lab-card"><h3>💻 معمل كمبيوتر 1</h3><button onclick="alert('25 جهاز PC')">الأدوات</button></div>
-            <div class="lab-card"><h3>💻 معمل كمبيوتر 2</h3><button onclick="alert('20 جهاز Laptop')">الأدوات</button></div>
-            <div class="lab-card"><h3>🔬 معمل الفيزياء</h3><button onclick="alert('أدوات تجارب الضوء')">الأدوات</button></div>
-            <div class="lab-card"><h3>⚡ معمل الكهرباء</h3><button onclick="alert('لوحات تجارب وأفوميتر')">الأدوات</button></div>
-        </div>
-    </div>
-</div>
-
-<div id="toastMsg" class="toast-message"></div>
 
 <script>
-    // --- 1. إدارة البيانات ---
-    function getComplaints() { return JSON.parse(localStorage.getItem("smartComplaints") || "[]"); }
-    function saveComplaints(data) { localStorage.setItem("smartComplaints", JSON.stringify(data)); }
+    let complaints = JSON.parse(localStorage.getItem("final_school_data") || "[]");
 
+    // 1. التحكم في قسم التفاصيل الرئيسي
+    document.getElementById("toggleDetailsBtn").onclick = function() {
+        const section = document.getElementById("detailsSection");
+        const isOpen = section.style.display === "block";
+        section.style.display = isOpen ? "none" : "block";
+        this.innerText = isOpen ? "🔍 Show Details (عرض المعامل)" : "🔼 إخفاء التفاصيل";
+    };
+
+    // 2. تفعيل الأكورديون (Accordion JS)
+    const accButtons = document.querySelectorAll(".accordion-btn");
+    accButtons.forEach(btn => {
+        btn.onclick = function() {
+            const content = this.nextElementSibling;
+            const span = this.querySelector("span");
+            
+            // إغلاق أي أكورديون آخر مفتوح (اختياري)
+            accButtons.forEach(otherBtn => {
+                if (otherBtn !== this) {
+                    otherBtn.nextElementSibling.style.maxHeight = null;
+                    otherBtn.querySelector("span").innerText = "▼";
+                }
+            });
+
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+                span.innerText = "▼";
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+                span.innerText = "▲";
+            }
+        };
+    });
+
+    // 3. إدارة البلاغات
     function render() {
-        const container = document.getElementById("complaintsContainer");
-        const list = getComplaints();
-        if(list.length === 0) {
-            container.innerHTML = '<div style="text-align:center; padding:20px; color:#7f8c8d;">السجل فارغ.</div>';
+        const listDiv = document.getElementById("complaintsList");
+        if (complaints.length === 0) {
+            listDiv.innerHTML = "<p style='text-align:center; color:#999;'>لا توجد بلاغات.</p>";
             return;
         }
-        container.innerHTML = list.map((c, i) => `
+        listDiv.innerHTML = complaints.map((c, i) => `
             <div class="complaint-card">
                 ${c.isAuto ? '<span class="auto-tag">تلقائي ⚡</span>' : ''}
-                <div style="font-weight:bold;">📍 ${c.roomNumber}: ${c.title}</div>
-                <p style="font-size:0.85rem; color:#555; margin:5px 0;">${c.description}</p>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
-                    <small style="color:#999;">${c.date}</small>
+                <strong>📍 ${c.roomNumber}</strong>: ${c.title}
+                <p style="font-size: 13px; color: #666; margin-top:5px;">${c.description}</p>
+                <div style="display:flex; justify-content:space-between; margin-top:10px;">
+                    <small style="color:#aaa;">${c.time}</small>
                     <button class="delete-btn" onclick="deleteItem(${i})">حذف</button>
                 </div>
             </div>
         `).join('');
     }
 
-    function addEntry(data, isAuto = false) {
-        const list = getComplaints();
-        list.unshift({ ...data, isAuto, date: new Date().toLocaleString('ar-EG') });
-        saveComplaints(list);
-        render();
-        showToast(isAuto ? "⚡ تم رصد انقطاع الشحن وبلاغ تلقائي" : "✅ تم الإرسال");
+    function addComplaint(data, isAuto = false) {
+        complaints.unshift({ ...data, isAuto, time: new Date().toLocaleTimeString('ar-EG') });
+        save(); render();
     }
 
-    function deleteItem(i) {
-        const list = getComplaints();
-        list.splice(i, 1);
-        saveComplaints(list);
-        render();
-    }
+    function deleteItem(i) { complaints.splice(i, 1); save(); render(); }
+    function save() { localStorage.setItem("final_school_data", JSON.stringify(complaints)); }
 
-    function showToast(msg) {
-        const t = document.getElementById("toastMsg");
-        t.textContent = msg; t.style.opacity = "1";
-        setTimeout(() => t.style.opacity = "0", 3000);
-    }
-
-    // --- 2. نظام التتبع التلقائي للشاحن (Battery Monitor) ---
+    // 4. نظام المراقبة التلقائي للشاحن
     if ('getBattery' in navigator) {
         navigator.getBattery().then(battery => {
             battery.addEventListener('chargingchange', () => {
                 if (!battery.charging) {
-                    // إذا فُصل الشاحن، أرسل شكوى تلقائية
-                    addEntry({
+                    addComplaint({
                         type: 'lab',
-                        roomNumber: 'النظام الآلي',
-                        title: 'انقطاع تيار كهربائي (شحن)',
-                        description: 'تم رصد فصل الشاحن عن الجهاز، قد يكون هناك مشكلة في مقبس الكهرباء.'
+                        roomNumber: 'النظام',
+                        title: 'انقطاع شحن (فصل شاحن)',
+                        description: 'تنبيه: تم رصد انقطاع الشاحن عن الجهاز المستخدم.'
                     }, true);
+                } else {
+                    // حذف بلاغ الشحن تلقائياً عند التوصيل
+                    complaints = complaints.filter(c => !(c.isAuto && c.title.includes("شاحن")));
+                    save(); render();
                 }
             });
         });
     }
 
-    // --- 3. الأحداث (Events) ---
-    document.getElementById("complaintForm").addEventListener("submit", (e) => {
+    document.getElementById("complaintForm").onsubmit = (e) => {
         e.preventDefault();
-        addEntry({
+        addComplaint({
             type: document.getElementById("complaintType").value,
             roomNumber: document.getElementById("roomNumber").value,
             title: document.getElementById("shortTitle").value,
             description: document.getElementById("description").value
         });
         e.target.reset();
-    });
-
-    document.getElementById("showDetailsBtn").addEventListener("click", () => {
-        document.getElementById("detailsPage").style.display = "block";
-    });
-
-    document.getElementById("clearAllBtn").addEventListener("click", () => {
-        if(confirm("مسح السجل بالكامل؟")) { saveComplaints([]); render(); }
-    });
+    };
 
     render();
 </script>
