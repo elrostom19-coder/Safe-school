@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>منصة الشكاوى - الفصول ومعامل الكمبيوتر</title>
+    <title>منصة الشكاوى الذكية - الفصول والمعامل</title>
     <style>
         * {
             margin: 0;
@@ -39,10 +39,6 @@
             flex-wrap: wrap;
         }
 
-        .header h1 i {
-            font-size: 2rem;
-        }
-
         .header p {
             color: #2c3e66;
             font-size: 1.05rem;
@@ -57,7 +53,7 @@
             gap: 2rem;
         }
 
-        .form-section {
+        .form-section, .lab-card {
             flex: 1;
             min-width: 280px;
             background: white;
@@ -105,18 +101,7 @@
             border-radius: 18px;
             font-size: 1rem;
             background-color: #fefefe;
-            transition: all 0.2s;
             outline: none;
-        }
-
-        select:focus, input:focus, textarea:focus {
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 100px;
         }
 
         button {
@@ -129,23 +114,33 @@
             font-weight: bold;
             cursor: pointer;
             width: 100%;
-            transition: background 0.2s, transform 0.1s;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            transition: 0.2s;
         }
 
-        button:hover {
-            background: #2c7ab3;
+        button:hover { background: #2c7ab3; }
+
+        /* صفحة التفاصيل */
+        #detailsPage {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #f0f4f8;
+            z-index: 2000;
+            padding: 40px 20px;
+            overflow-y: auto;
         }
 
-        button:active {
-            transform: scale(0.98);
+        .labs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
         }
 
         .complaints-list {
             flex: 1;
             max-height: 500px;
             overflow-y: auto;
-            padding-left: 5px;
         }
 
         .complaint-card {
@@ -154,88 +149,25 @@
             padding: 1.2rem;
             margin-bottom: 1rem;
             border-right: 5px solid #3498db;
-            transition: all 0.2s;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            position: relative;
         }
 
-        .complaint-card:hover {
-            background: #ffffff;
-            transform: translateX(-4px);
-            box-shadow: 0 8px 18px rgba(0,0,0,0.1);
-        }
-
-        .complaint-type {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            background: #e2e8f0;
-            color: #1e293b;
-        }
-
-        .type-classroom {
-            background: #d9effa;
-            color: #0369a1;
-        }
-
-        .type-lab {
-            background: #e0f2fe;
-            color: #0c4e6e;
-        }
-
-        .complaint-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin: 6px 0 8px 0;
-            color: #0f172a;
-        }
-
-        .complaint-detail {
-            color: #334155;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin: 8px 0;
-            word-break: break-word;
-        }
-
-        .complaint-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 12px;
-            font-size: 0.75rem;
-            color: #5b6e8c;
-            border-top: 1px dashed #cbd5e1;
-            padding-top: 10px;
+        .auto-tag {
+            background: #e74c3c;
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            position: absolute;
+            top: 10px; left: 10px;
         }
 
         .delete-btn {
-            background: none;
-            border: none;
+            background: #fee2e2;
             color: #e74c3c;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 0.8rem;
             width: auto;
             padding: 5px 12px;
-            border-radius: 30px;
-            background: #fee2e2;
-            transition: 0.2s;
-            box-shadow: none;
-        }
-
-        .delete-btn:hover {
-            background: #fecaca;
-            color: #b91c1c;
-        }
-
-        .empty-msg {
-            text-align: center;
-            color: #7f8c8d;
-            padding: 2rem;
-            font-style: italic;
+            font-size: 0.8rem;
         }
 
         .toast-message {
@@ -247,39 +179,25 @@
             color: white;
             padding: 12px 24px;
             border-radius: 50px;
-            font-weight: 500;
-            z-index: 1000;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            transition: opacity 0.3s;
             opacity: 0;
-            pointer-events: none;
+            transition: 0.3s;
+            z-index: 3000;
         }
 
         @media (max-width: 768px) {
-            .two-columns {
-                flex-direction: column;
-            }
-            .header h1 {
-                font-size: 1.7rem;
-            }
-        }
-
-        .status-badge {
-            background: #2ecc71;
-            color: white;
-            font-size: 0.7rem;
-            border-radius: 40px;
-            padding: 3px 8px;
+            .two-columns { flex-direction: column; }
         }
     </style>
 </head>
 <body>
+
 <div class="container">
     <div class="header">
-        <h1>
-            📢 منصة شكاوى الفصول ومعامل الكمبيوتر
-        </h1>
-        <p>سجل مشكلتك وسيتم التعامل معها بأولوية</p>
+        <h1>📢 منصة الشكاوى الذكية</h1>
+        <p>نظام المراقبة التلقائي للكهرباء مفعل ✅</p>
+        <div style="margin-top: 20px;">
+            <button id="showDetailsBtn" style="width: auto; background: #1e3c72; padding: 12px 30px;">🔍 عرض تفاصيل المعامل</button>
+        </div>
     </div>
 
     <div class="two-columns">
@@ -287,187 +205,137 @@
             <div class="form-title">📝 شكوى جديدة</div>
             <form id="complaintForm">
                 <div class="form-group">
-                    <label>🏷️ نوع المشكلة *</label>
+                    <label>🏷️ نوع المكان *</label>
                     <select id="complaintType" required>
-                        <option value="classroom">فصل دراسي (قاعة محاضرات)</option>
+                        <option value="classroom">فصل دراسي</option>
                         <option value="lab">معمل كمبيوتر</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>🔢 رقم الفصل / المعمل *</label>
-                    <input type="text" id="roomNumber" placeholder="مثال: 203 أو Lab-4" required maxlength="30">
+                    <label>🔢 رقم المكان *</label>
+                    <input type="text" id="roomNumber" placeholder="مثال: Lab-4" required>
                 </div>
                 <div class="form-group">
-                    <label>📌 عنوان مختصر للمشكلة *</label>
-                    <input type="text" id="shortTitle" placeholder="مثال: تكييف لا يعمل / أعطال في الحاسوب" required maxlength="60">
+                    <label>📌 العنوان *</label>
+                    <input type="text" id="shortTitle" placeholder="مثال: عطل مفاجئ" required>
                 </div>
                 <div class="form-group">
-                    <label>📝 وصف تفصيلي *</label>
-                    <textarea id="description" placeholder="اذكر تفاصيل المشكلة بالضبط... (مثلاً: 5 أجهزة لا تعمل، الإضاءة خافتة، كراسي مكسورة)" required></textarea>
+                    <label>📝 الوصف *</label>
+                    <textarea id="description" placeholder="اشرح المشكلة..." required></textarea>
                 </div>
-                <button type="submit" id="submitBtn">➕ إرسال الشكوى</button>
+                <button type="submit">➕ إرسال يدوياً</button>
             </form>
         </div>
 
         <div class="complaints-section">
-            <div class="list-title">📋 قائمة الشكاوى المقدمة</div>
+            <div class="list-title">📋 السجل (بما في ذلك البلاغات التلقائية)</div>
             <div id="complaintsContainer" class="complaints-list">
-                <div class="empty-msg">✨ لا توجد شكاوى حالياً. أضف شكوى جديدة.</div>
+                <div style="text-align:center; padding:20px; color:#7f8c8d;">لا توجد شكاوى حالياً.</div>
             </div>
-            <div style="margin-top: 15px; text-align: left;">
-                <button id="clearAllBtn" style="background: #e67e22; width: auto; padding: 8px 18px; font-size: 0.85rem;">🗑️ مسح الكل</button>
-            </div>
+            <button id="clearAllBtn" style="background: #e67e22; width: auto; margin-top:15px;">🗑️ مسح السجل</button>
         </div>
     </div>
 </div>
+
+<div id="detailsPage">
+    <div class="container">
+        <button onclick="document.getElementById('detailsPage').style.display='none'" style="width:auto; background:#e74c3c; margin-bottom: 20px;">⬅ عودة</button>
+        <h2 style="text-align:center; margin-bottom:30px;">توزيع المختبرات</h2>
+        <div class="labs-grid">
+            <div class="lab-card"><h3>💻 معمل كمبيوتر 1</h3><button onclick="alert('25 جهاز PC')">الأدوات</button></div>
+            <div class="lab-card"><h3>💻 معمل كمبيوتر 2</h3><button onclick="alert('20 جهاز Laptop')">الأدوات</button></div>
+            <div class="lab-card"><h3>🔬 معمل الفيزياء</h3><button onclick="alert('أدوات تجارب الضوء')">الأدوات</button></div>
+            <div class="lab-card"><h3>⚡ معمل الكهرباء</h3><button onclick="alert('لوحات تجارب وأفوميتر')">الأدوات</button></div>
+        </div>
+    </div>
+</div>
+
 <div id="toastMsg" class="toast-message"></div>
 
 <script>
-    function getComplaints() {
-        const stored = localStorage.getItem("classLabComplaints");
-        if(stored) {
-            try {
-                return JSON.parse(stored);
-            } catch(e) {
-                return [];
-            }
-        }
-        return [];
-    }
+    // --- 1. إدارة البيانات ---
+    function getComplaints() { return JSON.parse(localStorage.getItem("smartComplaints") || "[]"); }
+    function saveComplaints(data) { localStorage.setItem("smartComplaints", JSON.stringify(data)); }
 
-    function saveComplaints(complaints) {
-        localStorage.setItem("classLabComplaints", JSON.stringify(complaints));
-    }
-
-    function showToast(message, duration = 3000) {
-        const toast = document.getElementById("toastMsg");
-        toast.textContent = message;
-        toast.style.opacity = "1";
-        setTimeout(() => {
-            toast.style.opacity = "0";
-        }, duration);
-    }
-
-    function renderComplaints() {
-        const complaints = getComplaints();
+    function render() {
         const container = document.getElementById("complaintsContainer");
-        if(!container) return;
-        if(complaints.length === 0) {
-            container.innerHTML = '<div class="empty-msg">📭 لا توجد شكاوى حالياً. كن أول من يبلغ عن مشكلة!</div>';
+        const list = getComplaints();
+        if(list.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:20px; color:#7f8c8d;">السجل فارغ.</div>';
             return;
         }
-        let html = '';
-        complaints.forEach((complaint, index) => {
-            const typeLabel = complaint.type === 'classroom' ? '🏫 فصل دراسي' : '💻 معمل كمبيوتر';
-            const typeClass = complaint.type === 'classroom' ? 'type-classroom' : 'type-lab';
-            const roomDisplay = complaint.roomNumber ? complaint.roomNumber : 'غير محدد';
-            const dateStr = complaint.date ? complaint.date : new Date().toLocaleString('ar-EG');
-            html += `
-                <div class="complaint-card" data-id="${index}">
-                    <span class="complaint-type ${typeClass}">${typeLabel}</span>
-                    <div class="complaint-title">📍 رقم ${roomDisplay} : ${escapeHtml(complaint.title)}</div>
-                    <div class="complaint-detail">📄 ${escapeHtml(complaint.description)}</div>
-                    <div class="complaint-meta">
-                        <span>🕒 ${dateStr}</span>
-                        <button class="delete-btn" data-index="${index}">✖ حذف</button>
-                    </div>
+        container.innerHTML = list.map((c, i) => `
+            <div class="complaint-card">
+                ${c.isAuto ? '<span class="auto-tag">تلقائي ⚡</span>' : ''}
+                <div style="font-weight:bold;">📍 ${c.roomNumber}: ${c.title}</div>
+                <p style="font-size:0.85rem; color:#555; margin:5px 0;">${c.description}</p>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                    <small style="color:#999;">${c.date}</small>
+                    <button class="delete-btn" onclick="deleteItem(${i})">حذف</button>
                 </div>
-            `;
-        });
-        container.innerHTML = html;
+            </div>
+        `).join('');
+    }
 
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const idx = btn.getAttribute('data-index');
-                if(idx !== null) deleteComplaint(parseInt(idx));
+    function addEntry(data, isAuto = false) {
+        const list = getComplaints();
+        list.unshift({ ...data, isAuto, date: new Date().toLocaleString('ar-EG') });
+        saveComplaints(list);
+        render();
+        showToast(isAuto ? "⚡ تم رصد انقطاع الشحن وبلاغ تلقائي" : "✅ تم الإرسال");
+    }
+
+    function deleteItem(i) {
+        const list = getComplaints();
+        list.splice(i, 1);
+        saveComplaints(list);
+        render();
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById("toastMsg");
+        t.textContent = msg; t.style.opacity = "1";
+        setTimeout(() => t.style.opacity = "0", 3000);
+    }
+
+    // --- 2. نظام التتبع التلقائي للشاحن (Battery Monitor) ---
+    if ('getBattery' in navigator) {
+        navigator.getBattery().then(battery => {
+            battery.addEventListener('chargingchange', () => {
+                if (!battery.charging) {
+                    // إذا فُصل الشاحن، أرسل شكوى تلقائية
+                    addEntry({
+                        type: 'lab',
+                        roomNumber: 'النظام الآلي',
+                        title: 'انقطاع تيار كهربائي (شحن)',
+                        description: 'تم رصد فصل الشاحن عن الجهاز، قد يكون هناك مشكلة في مقبس الكهرباء.'
+                    }, true);
+                }
             });
         });
     }
 
-    function escapeHtml(str) {
-        if(!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if(m === '&') return '&amp;';
-            if(m === '<') return '&lt;';
-            if(m === '>') return '&gt;';
-            return m;
-        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-            return c;
-        });
-    }
-
-    function addComplaint(complaintData) {
-        const complaints = getComplaints();
-        const newComplaint = {
-            id: Date.now(),
-            type: complaintData.type,
-            roomNumber: complaintData.roomNumber.trim(),
-            title: complaintData.title.trim(),
-            description: complaintData.description.trim(),
-            date: new Date().toLocaleString('ar-EG')
-        };
-        complaints.unshift(newComplaint);
-        saveComplaints(complaints);
-        renderComplaints();
-        showToast("✅ تم تقديم الشكوى بنجاح");
-    }
-
-    function deleteComplaint(index) {
-        const complaints = getComplaints();
-        if(index >= 0 && index < complaints.length) {
-            complaints.splice(index, 1);
-            saveComplaints(complaints);
-            renderComplaints();
-            showToast("🗑️ تم حذف الشكوى");
-        } else {
-            showToast("حدث خطأ أثناء الحذف", 1500);
-        }
-    }
-
-    function clearAllComplaints() {
-        if(confirm("⚠️ هل أنت متأكد من حذف جميع الشكاوى؟ لا يمكن التراجع.")) {
-            saveComplaints([]);
-            renderComplaints();
-            showToast("🧹 تم مسح جميع الشكاوى");
-        }
-    }
-
-    document.getElementById("complaintForm").addEventListener("submit", function(e) {
+    // --- 3. الأحداث (Events) ---
+    document.getElementById("complaintForm").addEventListener("submit", (e) => {
         e.preventDefault();
-        const type = document.getElementById("complaintType").value;
-        const roomNumber = document.getElementById("roomNumber").value;
-        const shortTitle = document.getElementById("shortTitle").value;
-        const description = document.getElementById("description").value;
-
-        if(!roomNumber || !shortTitle || !description) {
-            showToast("❌ الرجاء تعبئة جميع الحقول (رقم المكان، العنوان، الوصف)", 2500);
-            return;
-        }
-        if(roomNumber.trim() === "" || shortTitle.trim() === "" || description.trim() === "") {
-            showToast("❌ لا يمكن أن تحتوي الحقول على مسافات فقط", 2000);
-            return;
-        }
-        if(shortTitle.length > 60) {
-            showToast("⚠️ العنوان طويل جداً (حد أقصى 60 حرف)", 2000);
-            return;
-        }
-        addComplaint({
-            type: type,
-            roomNumber: roomNumber,
-            title: shortTitle,
-            description: description
+        addEntry({
+            type: document.getElementById("complaintType").value,
+            roomNumber: document.getElementById("roomNumber").value,
+            title: document.getElementById("shortTitle").value,
+            description: document.getElementById("description").value
         });
-        document.getElementById("complaintForm").reset();
-        document.getElementById("complaintType").value = "classroom";
-        document.getElementById("roomNumber").focus();
+        e.target.reset();
     });
 
-    document.getElementById("clearAllBtn").addEventListener("click", function() {
-        clearAllComplaints();
+    document.getElementById("showDetailsBtn").addEventListener("click", () => {
+        document.getElementById("detailsPage").style.display = "block";
     });
 
-    renderComplaints();
+    document.getElementById("clearAllBtn").addEventListener("click", () => {
+        if(confirm("مسح السجل بالكامل؟")) { saveComplaints([]); render(); }
+    });
+
+    render();
 </script>
 </body>
 </html>
